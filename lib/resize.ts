@@ -64,7 +64,9 @@ export async function resizeImage(
   config: ResizeConfig
 ): Promise<HTMLCanvasElement> {
   const { default: Pica } = await import("pica");
-  const picaInstance = new Pica();
+  // features: ['js'] 停用 WebWorker，避免 Turbopack 打包的 runtime 在 worker 環境缺少
+  // __turbopack_context__ 而拋出 ReferenceError
+  const picaInstance = new Pica({ features: ["js"] });
 
   const { targetWidth, targetHeight, fittingStrategy, bgColor } = config;
   const srcW = sourceCanvas.width;
