@@ -22,12 +22,12 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 **目的**: 建立 Next.js 16 專案基礎與安裝所有依賴
 
-- [ ] T001 用 `npx create-next-app@latest pixpeel --typescript --app` 建立 Next.js 16 + TypeScript + App Router 專案
-- [ ] T002 [P] 用 `npx shadcn@latest init -t next` 初始化 shadcn/ui（new-york style, Tailwind v4 自動偵測）
-- [ ] T003 [P] 安裝執行期套件：`npm install react-easy-crop pica zustand zundo immer react-colorful sonner`
-- [ ] T004 用 shadcn CLI 新增元件：`npx shadcn@latest add button slider select input popover tooltip toggle-group sonner`
-- [ ] T005 [P] 配置 Vitest + React Testing Library：`npm install -D vitest @vitejs/plugin-react @testing-library/react @testing-library/user-event jsdom`，建立 `vitest.config.ts`
-- [ ] T006 [P] 配置 Playwright E2E：`npm install -D @playwright/test`，建立 `playwright.config.ts`，target `http://localhost:3000`
+- [x] T001 用 `npx create-next-app@latest pixpeel --typescript --app` 建立 Next.js 16 + TypeScript + App Router 專案
+- [x] T002 [P] 用 `npx shadcn@latest init -t next` 初始化 shadcn/ui（new-york style, Tailwind v4 自動偵測）
+- [x] T003 [P] 安裝執行期套件：`npm install react-easy-crop pica zustand zundo immer react-colorful sonner`
+- [x] T004 用 shadcn CLI 新增元件：`npx shadcn@latest add button slider select input popover tooltip toggle-group sonner`
+- [x] T005 [P] 配置 Vitest + React Testing Library：`npm install -D vitest @vitejs/plugin-react @testing-library/react @testing-library/user-event jsdom`，建立 `vitest.config.ts`
+- [x] T006 [P] 配置 Playwright E2E：`npm install -D @playwright/test`，建立 `playwright.config.ts`，target `http://localhost:3000`
 
 ---
 
@@ -37,15 +37,15 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 **⚠️ 所有用戶故事開始前必須完成此階段**
 
-- [ ] T007 定義全部 TypeScript 型別於 `types/editor.ts`（`EditorMode`, `SourceImage`, `CropBox`, `AspectRatioLock`, `AutoCropConfig`, `FittingStrategy`, `ResizeConfig`, `OutputFormat`, `ExportConfig`, `EditorState`, 常數 `MIN_CROP_SIZE`, `DEFAULT_QUALITY`, `MAX_HISTORY`, `DEFAULT_THRESHOLD`）
-- [ ] T008 [P] 建立 `lib/empty.ts`（空模組，供 turbopack resolveAlias 使用：`export default {}`）
-- [ ] T009 [P] 配置 `next.config.ts`（加入 `turbopack.resolveAlias` 將 `fs`、`path` 指向 `lib/empty.ts`）
-- [ ] T010 實作 `hooks/use-editor-store.ts`（Zustand + zundo + immer store，包含：`source`, `mode`, `cropBox`, `zoom`, `aspectRatio`, `autoCropConfig`, `resizeConfig`, `exportConfig`, `isProcessing`；actions：`loadImage`, `setMode`, `setCropBox`, `updateCropBoxPreview`, `setZoom`, `setAspectRatio`, `setExportConfig`；zundo `partialize` 只追蹤 `mode/cropBox/zoom/aspectRatio/autoCropConfig/resizeConfig`，`limit: 50`）
-- [ ] T011 [P] 實作 `lib/image-export.ts`（`cropToCanvas(image, cropBox): HTMLCanvasElement`、`canvasToBlob(canvas, format, quality): Promise<Blob>`、`downloadBlob(blob, fileName, format): void`）
-- [ ] T012 實作 `components/editor/image-uploader.tsx`（`'use client'`，支援 `<input type="file" accept="image/jpeg,image/png,image/webp">`點擊與拖曳上傳；格式錯誤時呼叫 `sonner.toast.error`；成功時呼叫 `store.loadImage`）
-- [ ] T013 實作 `components/editor/image-editor.tsx`（`'use client'`，根據 `source` 是否為 null 顯示 `ImageUploader` 或編輯器主體；編輯器主體結構：Toolbar + 模式容器 + ExportPanel）
-- [ ] T014 [P] 設定 `app/layout.tsx`（加入 `<Toaster />` from sonner, metadata title="Pixpeel"）
-- [ ] T015 [P] 設定 `app/page.tsx`（渲染 `<ImageEditor />`，全版面居中）
+- [x] T007 定義全部 TypeScript 型別於 `types/editor.ts`（`EditorMode`, `SourceImage`, `CropBox`, `AspectRatioLock`, `AutoCropConfig`, `FittingStrategy`, `ResizeConfig`, `OutputFormat`, `ExportConfig`, `EditorState`, 常數 `MIN_CROP_SIZE`, `DEFAULT_QUALITY`, `MAX_HISTORY`, `DEFAULT_THRESHOLD`）
+- [x] T008 [P] 建立 `lib/empty.ts`（空模組，供 turbopack resolveAlias 使用：`export default {}`）
+- [x] T009 [P] 配置 `next.config.ts`（加入 `turbopack.resolveAlias` 將 `fs`、`path` 指向 `lib/empty.ts`）
+- [x] T010 實作 `hooks/use-editor-store.ts`（Zustand + zundo + immer store，包含：`source`, `mode`, `cropBox`, `zoom`, `aspectRatio`, `autoCropConfig`, `resizeConfig`, `exportConfig`, `isProcessing`；actions：`loadImage`, `setMode`, `setCropBox`, `updateCropBoxPreview`, `setZoom`, `setAspectRatio`, `setExportConfig`；zundo `partialize` 只追蹤 `mode/cropBox/zoom/aspectRatio/autoCropConfig/resizeConfig`，`limit: 50`）
+- [x] T011 [P] 實作 `lib/image-export.ts`（`cropToCanvas(image, cropBox): HTMLCanvasElement`、`canvasToBlob(canvas, format, quality): Promise<Blob>`、`downloadBlob(blob, fileName, format): void`）
+- [x] T012 實作 `components/editor/image-uploader.tsx`（`'use client'`，支援 `<input type="file" accept="image/jpeg,image/png,image/webp">`點擊與拖曳上傳；格式錯誤時呼叫 `sonner.toast.error`；成功時呼叫 `store.loadImage`）
+- [x] T013 實作 `components/editor/image-editor.tsx`（`'use client'`，根據 `source` 是否為 null 顯示 `ImageUploader` 或編輯器主體；編輯器主體結構：Toolbar + 模式容器 + ExportPanel）
+- [x] T014 [P] 設定 `app/layout.tsx`（加入 `<Toaster />` from sonner, metadata title="Pixpeel"）
+- [x] T015 [P] 設定 `app/page.tsx`（渲染 `<ImageEditor />`，全版面居中）
 
 **Checkpoint**: 基礎架構就緒，可開始各用戶故事實作
 
@@ -59,19 +59,19 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 ### 測試（先寫測試，確認失敗後再實作）
 
-- [ ] T016 [P] [US1] 在 `tests/unit/image-export.test.ts` 撰寫 `cropToCanvas` 的單元測試（測試裁切座標正確對應到輸出 canvas 尺寸）
+- [x] T016 [P] [US1] 在 `tests/unit/image-export.test.ts` 撰寫 `cropToCanvas` 的單元測試（測試裁切座標正確對應到輸出 canvas 尺寸）
 - [ ] T017 [P] [US1] 在 `tests/components/crop-canvas.test.tsx` 撰寫 `CropCanvas` 的元件測試（測試 `onCropComplete` 在放開手把後被呼叫，並傳入正確的 `CropBox`）
 - [ ] T018 [P] [US1] 在 `tests/components/toolbar.test.tsx` 撰寫 `Toolbar` 的元件測試（測試：Undo button 在 `canUndo=false` 時顯示 disabled；Redo button 在 `canRedo=false` 時顯示 disabled；點擊 Resize icon 觸發 `onResizeMode`）
 - [ ] T019 [US1] 在 `tests/e2e/crop.spec.ts` 撰寫 P1 完整流程 E2E 測試（上傳圖片 → 裁切框存在 → 拖動裁切框 → 點擊下載 → 驗證下載觸發）
 
 ### 實作
 
-- [ ] T020 [P] [US1] 實作 `components/crop/crop-canvas.tsx`（`'use client'`，包裝 `react-easy-crop` `<Cropper>`；`onCropChange` 呼叫 `store.updateCropBoxPreview`；`onCropComplete` 呼叫 `store.setCropBox`，傳入 `croppedAreaPixels`）
-- [ ] T021 [P] [US1] 實作 `components/crop/aspect-ratio-selector.tsx`（shadcn `ToggleGroup` one value；選項：`free | 1:1 | 4:3 | 3:4 | 16:9 | 9:16`；onChange 呼叫 `store.setAspectRatio`）
-- [ ] T022 [US1] 實作 `components/crop/crop-mode.tsx`（組合 `CropCanvas` + `AspectRatioSelector`，從 store 取得 `imageSrc`, `cropBox`, `zoom`, `aspectRatio`）
-- [ ] T023 [US1] 實作 `components/editor/toolbar.tsx`（shadcn `Button` × 4：Crop icon, Resize icon, Undo icon, Redo icon；shadcn `Tooltip` × 4；Undo/Redo 依 `canUndo`/`canRedo` 顯示 disabled；高亮當前 mode；鍵盤快捷鍵監聽器 `Ctrl+Z → undo`、`Ctrl+Y → redo`）
-- [ ] T024 [US1] 實作 `components/editor/export-panel.tsx`（shadcn `Select` for format PNG/JPEG/WebP 預設跟隨輸入格式；shadcn `Slider` for quality 0–100 僅 JPEG/WebP 顯示；shadcn `Button` 下載；`isProcessing` 時顯示 loading）
-- [ ] T025 [US1] 將 US1 完整串接進 `components/editor/image-editor.tsx`（渲染 Toolbar + CropMode + ExportPanel；ExportPanel `onExport` 呼叫 `cropToCanvas` → `canvasToBlob` → `downloadBlob`）
+- [x] T020 [P] [US1] 實作 `components/crop/crop-canvas.tsx`（`'use client'`，包裝 `react-easy-crop` `<Cropper>`；`onCropChange` 呼叫 `store.updateCropBoxPreview`；`onCropComplete` 呼叫 `store.setCropBox`，傳入 `croppedAreaPixels`）
+- [x] T021 [P] [US1] 實作 `components/crop/aspect-ratio-selector.tsx`（shadcn `ToggleGroup` one value；選項：`free | 1:1 | 4:3 | 3:4 | 16:9 | 9:16`；onChange 呼叫 `store.setAspectRatio`）
+- [x] T022 [US1] 實作 `components/crop/crop-mode.tsx`（組合 `CropCanvas` + `AspectRatioSelector`，從 store 取得 `imageSrc`, `cropBox`, `zoom`, `aspectRatio`）
+- [x] T023 [US1] 實作 `components/editor/toolbar.tsx`（shadcn `Button` × 4：Crop icon, Resize icon, Undo icon, Redo icon；shadcn `Tooltip` × 4；Undo/Redo 依 `canUndo`/`canRedo` 顯示 disabled；高亮當前 mode；鍵盤快捷鍵監聽器 `Ctrl+Z → undo`、`Ctrl+Y → redo`）
+- [x] T024 [US1] 實作 `components/editor/export-panel.tsx`（shadcn `Select` for format PNG/JPEG/WebP 預設跟隨輸入格式；shadcn `Slider` for quality 0–100 僅 JPEG/WebP 顯示；shadcn `Button` 下載；`isProcessing` 時顯示 loading）
+- [x] T025 [US1] 將 US1 完整串接進 `components/editor/image-editor.tsx`（渲染 Toolbar + CropMode + ExportPanel；ExportPanel `onExport` 呼叫 `cropToCanvas` → `canvasToBlob` → `downloadBlob`）
 
 **Checkpoint**: 上傳圖片 → 裁切 → 下載完整流程可獨立演示與測試，Undo/Redo 工作正常
 
@@ -85,15 +85,15 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 ### 測試（先寫測試，確認失敗後再實作）
 
-- [ ] T026 [P] [US2] 在 `tests/unit/auto-crop.test.ts` 撰寫 `findCropBox` 的單元測試（測試情境：全白圖片返回全圖尺寸、四周白邊圖片返回正確邊界、不同 thresholdPercent 影響邊界寬鬆度）
+- [x] T026 [P] [US2] 在 `tests/unit/auto-crop.test.ts` 撰寫 `findCropBox` 的單元測試（測試情境：全白圖片返回全圖尺寸、四周白邊圖片返回正確邊界、不同 thresholdPercent 影響邊界寬鬆度）
 - [ ] T027 [US2] 在 `tests/e2e/auto-crop.spec.ts` 撰寫 P2 完整流程 E2E 測試（上傳有白邊圖片 → 點擊自動裁切 → 驗證裁切框縮小；上傳全白圖片 → 點擊自動裁切 → 驗證警告 toast 出現）
 
 ### 實作
 
-- [ ] T028 [US2] 實作 `lib/auto-crop.ts`（TypeScript 移植 `auto-crop-1.js` 的 `findCropBoxJS`，函式簽名：`findCropBox(imageData: ImageData, thresholdPercent: number): CropBox`，算法完全相同，加入型別標註）
-- [ ] T029 [US2] 在 `hooks/use-editor-store.ts` 新增 `runAutoCrop` action（將當前圖片繪製到 offscreen canvas → 呼叫 `getImageData` → 呼叫 `findCropBox` → 若返回全圖尺寸則呼叫 `sonner.toast.warning` → 否則呼叫 `setCropBox` 更新裁切框）、`setAutoCropConfig` action
-- [ ] T030 [US2] 實作 `components/crop/auto-crop-controls.tsx`（shadcn `Button` 「自動裁切」，`isProcessing` 時顯示 spinner；shadcn `Slider` 容差 0–100，顯示當前值，`onValueChange` 呼叫 `setAutoCropConfig` 並即時觸發 `runAutoCrop`）
-- [ ] T031 [US2] 將 `AutoCropControls` 整合進 `components/crop/crop-mode.tsx`
+- [x] T028 [US2] 實作 `lib/auto-crop.ts`（TypeScript 移植 `auto-crop-1.js` 的 `findCropBoxJS`，函式簽名：`findCropBox(imageData: ImageData, thresholdPercent: number): CropBox`，算法完全相同，加入型別標註）
+- [x] T029 [US2] 在 `hooks/use-editor-store.ts` 新增 `runAutoCrop` action（將當前圖片繪製到 offscreen canvas → 呼叫 `getImageData` → 呼叫 `findCropBox` → 若返回全圖尺寸則呼叫 `sonner.toast.warning` → 否則呼叫 `setCropBox` 更新裁切框）、`setAutoCropConfig` action
+- [x] T030 [US2] 實作 `components/crop/auto-crop-controls.tsx`（shadcn `Button` 「自動裁切」，`isProcessing` 時顯示 spinner；shadcn `Slider` 容差 0–100，顯示當前值，`onValueChange` 呼叫 `setAutoCropConfig` 並即時觸發 `runAutoCrop`）
+- [x] T031 [US2] 將 `AutoCropControls` 整合進 `components/crop/crop-mode.tsx`
 
 **Checkpoint**: 自動裁切可獨立演示，手動調整容差即時生效，警告 toast 正確觸發
 
@@ -107,19 +107,19 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 ### 測試（先寫測試，確認失敗後再實作）
 
-- [ ] T032 [P] [US3] 在 `tests/unit/resize.test.ts` 撰寫 `computeFitRect` 的單元測試（測試 contain/cover/fill 三種策略的幾何計算，包含橫向圖、直向圖、正方形圖三種 srcW/srcH 組合）
-- [ ] T033 [P] [US3] 在 `tests/components/fitting-strategy-selector.test.tsx` 撰寫元件測試（測試三個策略選項均可點選，選中後 onChange 被呼叫）
+- [x] T032 [P] [US3] 在 `tests/unit/resize.test.ts` 撰寫 `computeFitRect` 的單元測試（測試 contain/cover/fill 三種策略的幾何計算，包含橫向圖、直向圖、正方形圖三種 srcW/srcH 組合）
+- [x] T033 [P] [US3] 在 `tests/components/fitting-strategy-selector.test.tsx` 撰寫元件測試（測試三個策略選項均可點選，選中後 onChange 被呼叫）
 - [ ] T034 [US3] 在 `tests/e2e/resize.spec.ts` 撰寫 P3 完整流程 E2E 測試（上傳圖片 → 點擊 Resize icon → 輸入 400×400 → 分別選 contain/cover/fill 並下載 → 驗證輸出圖片尺寸為 400×400）
 
 ### 實作
 
-- [ ] T035 [US3] 實作 `lib/resize.ts`（`computeFitRect(srcW, srcH, dstW, dstH, strategy): { intermediateW, intermediateH, dx, dy }`；`resizeImage(sourceCanvas, config): Promise<HTMLCanvasElement>`：內部動態 import pica，contain 策略時將 intermediate canvas 合成到背景色 dst canvas，cover 策略居中裁切，fill 直接 resize；JPEG 輸出時 `bgColor` 自動退回白色）
-- [ ] T036 [P] [US3] 實作 `components/resize/dimension-inputs.tsx`（shadcn `Input` type=number min=1 × 2 for width/height；連動 toggle Button（鎖頭 icon）啟用時修改寬/高會等比連動另一邊；無效輸入顯示 error state 且不更新 store）
-- [ ] T037 [P] [US3] 實作 `components/resize/fitting-strategy-selector.tsx`（shadcn `ToggleGroup` one value；三個選項：Contain / Cover / Fill，各附中文說明文字；onChange 呼叫 `store.setResizeConfig`）
-- [ ] T038 [P] [US3] 實作 `components/resize/background-color-picker.tsx`（shadcn `Popover` + `react-colorful` `HexColorPicker`；提供「透明」Button；當 `format='image/jpeg'` 且 `color='transparent'` 時顯示警告文字「JPEG 不支援透明，將自動填白」）
-- [ ] T039 [US3] 實作 `components/resize/resize-mode.tsx`（組合 `DimensionInputs` + `FittingStrategySelector` + `BackgroundColorPicker`（僅 Contain 策略顯示）；從 store 取得 `resizeConfig`）
-- [ ] T040 [US3] 在 `hooks/use-editor-store.ts` 新增 `setResizeConfig` action 與 ResizeMode 下的 `exportImage` 邏輯（`cropToCanvas` 取裁切結果 → `resizeImage` → `canvasToBlob` → `downloadBlob`）
-- [ ] T041 [US3] 將 `ResizeMode` 串接進 `components/editor/image-editor.tsx`（mode='resize' 時渲染 `ResizeMode` 取代 `CropMode`；`ExportPanel` 的 `onExport` 根據當前 mode 選擇對應的輸出路徑）
+- [x] T035 [US3] 實作 `lib/resize.ts`（`computeFitRect(srcW, srcH, dstW, dstH, strategy): { intermediateW, intermediateH, dx, dy }`；`resizeImage(sourceCanvas, config): Promise<HTMLCanvasElement>`：內部動態 import pica，contain 策略時將 intermediate canvas 合成到背景色 dst canvas，cover 策略居中裁切，fill 直接 resize；JPEG 輸出時 `bgColor` 自動退回白色）
+- [x] T036 [P] [US3] 實作 `components/resize/dimension-inputs.tsx`（shadcn `Input` type=number min=1 × 2 for width/height；連動 toggle Button（鎖頭 icon）啟用時修改寬/高會等比連動另一邊；無效輸入顯示 error state 且不更新 store）
+- [x] T037 [P] [US3] 實作 `components/resize/fitting-strategy-selector.tsx`（shadcn `ToggleGroup` one value；三個選項：Contain / Cover / Fill，各附中文說明文字；onChange 呼叫 `store.setResizeConfig`）
+- [x] T038 [P] [US3] 實作 `components/resize/background-color-picker.tsx`（shadcn `Popover` + `react-colorful` `HexColorPicker`；提供「透明」Button；當 `format='image/jpeg'` 且 `color='transparent'` 時顯示警告文字「JPEG 不支援透明，將自動填白」）
+- [x] T039 [US3] 實作 `components/resize/resize-mode.tsx`（組合 `DimensionInputs` + `FittingStrategySelector` + `BackgroundColorPicker`（僅 Contain 策略顯示）；從 store 取得 `resizeConfig`）
+- [x] T040 [US3] 在 `hooks/use-editor-store.ts` 新增 `setResizeConfig` action 與 ResizeMode 下的 `exportImage` 邏輯（`cropToCanvas` 取裁切結果 → `resizeImage` → `canvasToBlob` → `downloadBlob`）
+- [x] T041 [US3] 將 `ResizeMode` 串接進 `components/editor/image-editor.tsx`（mode='resize' 時渲染 `ResizeMode` 取代 `CropMode`；`ExportPanel` 的 `onExport` 根據當前 mode 選擇對應的輸出路徑）
 
 **Checkpoint**: 三個用戶故事均可獨立演示，串聯流程（裁切 → 縮放）完整可用
 
@@ -129,10 +129,10 @@ description: "Task list for 圖片裁切與縮放編輯器"
 
 **目的**: 文件、測試收斂、跨瀏覽器驗證
 
-- [ ] T042 [P] 撰寫 `README.md`（專案說明、功能截圖佔位、安裝步驟、Vercel Deploy Button `[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_ORG%2Fpixpeel&project-name=pixpeel&repository-name=pixpeel)` 替換 YOUR_ORG 後正式填入）
-- [ ] T043 [P] 在 `tests/unit/image-export.test.ts` 補充 `canvasToBlob` 與 `downloadBlob` 的單元測試
-- [ ] T044 執行全部單元測試並修正失敗：`npm run test`
-- [ ] T045 執行全部元件測試並修正失敗：`npm run test:components`
+- [x] T042 [P] 撰寫 `README.md`（專案說明、功能截圖佔位、安裝步驟、Vercel Deploy Button `[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_ORG%2Fpixpeel&project-name=pixpeel&repository-name=pixpeel)` 替換 YOUR_ORG 後正式填入）
+- [x] T043 [P] 在 `tests/unit/image-export.test.ts` 補充 `canvasToBlob` 與 `downloadBlob` 的單元測試
+- [x] T044 執行全部單元測試並修正失敗：`npm run test`
+- [x] T045 執行全部元件測試並修正失敗：`npm run test:components`
 - [ ] T046 啟動 dev server 並執行 Playwright E2E 測試：`npm run dev` + `npm run test:e2e`
 - [ ] T047 依照 `specs/001-image-crop-resize/quickstart.md` 手動驗證三個用戶故事與 Undo/Redo 完整流程
 
