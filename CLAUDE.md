@@ -34,9 +34,9 @@ Key distinction in crop actions:
 - `setCropBox` — records a history snapshot (call after user finishes interacting)
 - `updateCropBoxPreview` — updates state without history via `pause()`/`resume()` (call during drag mid-frames and during react-easy-crop initialization)
 
-### react-easy-crop initialization quirk
+### Crop library
 
-`react-easy-crop` fires `onCropComplete` **4–5 times** during mount before any user interaction. `CropCanvas` uses a `hasInteractedRef` (set on `pointerdown`) to route those init calls to `updateCropBoxPreview` instead of `setCropBox`, preventing spurious undo history entries.
+`CropCanvas` uses **`react-image-crop`** (not `react-easy-crop`). The user sees the full image and drags handles to resize/reposition the crop selection. `onChange` (mid-drag) calls `onCropChange` → `updateCropBoxPreview` (no history); `onComplete` (mouse-up) calls `onCropComplete` → `setCropBox` (records history). A `lastCropBoxRef` prevents the external-cropBox sync `useEffect` (used for undo/redo and auto-crop) from fighting with in-progress user drags.
 
 ### UI components
 

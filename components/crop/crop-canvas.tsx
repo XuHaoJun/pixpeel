@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useRef } from "react";
-import Cropper from "react-easy-crop";
-import type { Area } from "react-easy-crop";
+import { useState, useRef, useCallback, useEffect } from "react";
+import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import type { CropBox } from "@/types/editor";
 
 interface CropCanvasProps {
@@ -18,65 +18,105 @@ interface CropCanvasProps {
 export function CropCanvas({
   imageSrc,
   cropBox,
-  zoom,
   aspectRatio,
   onCropChange,
   onCropComplete,
-  onZoomChange,
 }: CropCanvasProps) {
-  const crop = { x: 0, y: 0 };
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [crop, setCrop] = useState<Crop>();
 
-  // react-easy-crop 初始化時會從 recomputeCropPosition / onMediaLoad 觸發多次
-  // onCropComplete（實測 4 次），全部都在使用者互動之前。
-  // 用 pointerdown 旗標判斷「使用者是否真正開始拖動」：
-  //   - 未互動前：所有 onCropComplete 走 onCropChange（= updateCropBoxPreview，不寫歷史）
-  //   - 互動後：走 onCropComplete（= setCropBox，正常寫歷史）
-  // imageSrc 改變時同步重置旗標（在 render 期間），確保新圖載入時重新等待互動。
-  const hasInteractedRef = useRef(false);
-  const prevImageSrcRef = useRef(imageSrc);
-  if (prevImageSrcRef.current !== imageSrc) {
-    prevImageSrcRef.current = imageSrc;
-    hasInteractedRef.current = false;
-  }
+  // Track the last cropBox value we reported or synced, to distinguish
+  // external changes (undo/redo, auto-crop) from our own updates.
+  const lastCropBoxRef = useRef<CropBox | null>(null);
 
-  const handleCropComplete = useCallback(
-    (_: Area, croppedAreaPixels: Area) => {
-      const box: CropBox = {
-        x: croppedAreaPixels.x,
-        y: croppedAreaPixels.y,
-        width: croppedAreaPixels.width,
-        height: croppedAreaPixels.height,
-      };
-      if (!hasInteractedRef.current) {
-        onCropChange(box); // 初始化觸發 — 不寫歷史
-        return;
+  const toNaturalBox = useCallback((px: PixelCrop): CropBox | null => {
+    const img = imgRef.current;
+    if (!img) return null;
+    const scaleX = img.naturalWidth / img.width;
+    const scaleY = img.naturalHeight / img.height;
+    return {
+      x: Math.round(px.x * scaleX),
+      y: Math.round(px.y * scaleY),
+      width: Math.round(px.width * scaleX),
+      height: Math.round(px.height * scaleY),
+    };
+  }, []);
+
+  const toCrop = (box: CropBox, img: HTMLImageElement): Crop => ({
+    unit: "%",
+    x: (box.x / img.naturalWidth) * 100,
+    y: (box.y / img.naturalHeight) * 100,
+    width: (box.width / img.naturalWidth) * 100,
+    height: (box.height / img.naturalHeight) * 100,
+  });
+
+  // When image loads, initialize crop selection from cropBox
+  const handleImageLoad = useCallback(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    lastCropBoxRef.current = cropBox;
+    setCrop(toCrop(cropBox, img));
+  // cropBox intentionally not in deps: only run on image load
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageSrc]);
+
+  // Sync external cropBox changes (undo/redo, auto-crop) to internal state
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img || img.naturalWidth === 0) return;
+    const prev = lastCropBoxRef.current;
+    if (
+      prev &&
+      prev.x === cropBox.x &&
+      prev.y === cropBox.y &&
+      prev.width === cropBox.width &&
+      prev.height === cropBox.height
+    ) return;
+    lastCropBoxRef.current = cropBox;
+    setCrop(toCrop(cropBox, img));
+  }, [cropBox]);
+
+  const handleChange = useCallback(
+    (px: PixelCrop) => {
+      setCrop(px);
+      const box = toNaturalBox(px);
+      if (box) {
+        lastCropBoxRef.current = box;
+        onCropChange(box);
       }
-      onCropComplete(box); // 使用者互動後 — 正常寫歷史
     },
-    [onCropChange, onCropComplete]
+    [toNaturalBox, onCropChange]
+  );
+
+  const handleComplete = useCallback(
+    (px: PixelCrop) => {
+      if (px.width < 1 || px.height < 1) return;
+      const box = toNaturalBox(px);
+      if (box) {
+        lastCropBoxRef.current = box;
+        onCropComplete(box);
+      }
+    },
+    [toNaturalBox, onCropComplete]
   );
 
   return (
-    <div
-      className="relative w-full h-full min-h-[400px] bg-checkerboard"
-      onPointerDown={() => { hasInteractedRef.current = true; }}
-    >
-      <Cropper
-        image={imageSrc}
+    <div className="relative w-full h-full min-h-[400px] bg-checkerboard flex items-center justify-center overflow-auto p-4">
+      <ReactCrop
         crop={crop}
-        zoom={zoom}
+        onChange={handleChange}
+        onComplete={handleComplete}
         aspect={aspectRatio ?? undefined}
-        onCropChange={() => {
-          // react-easy-crop 的 onCropChange 提供顯示區域偏移，不需要轉成 CropBox
-          // 我們在 onCropComplete 才取像素值
-        }}
-        onCropComplete={handleCropComplete}
-        onZoomChange={onZoomChange}
-        showGrid
-        style={{
-          containerStyle: { width: "100%", height: "100%", position: "relative" },
-        }}
-      />
+        keepSelection
+      >
+        <img
+          ref={imgRef}
+          src={imageSrc}
+          alt=""
+          style={{ maxWidth: "100%", maxHeight: "calc(100vh - 300px)" }}
+          onLoad={handleImageLoad}
+        />
+      </ReactCrop>
     </div>
   );
 }
