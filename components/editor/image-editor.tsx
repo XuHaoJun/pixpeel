@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useStore } from "zustand";
 import { useEditorStore } from "@/hooks/use-editor-store";
 import { ImageUploader } from "./image-uploader";
@@ -14,14 +14,6 @@ export function ImageEditor() {
   const mode = useEditorStore((s) => s.mode);
   const loadImage = useEditorStore((s) => s.loadImage);
   const setMode = useEditorStore((s) => s.setMode);
-
-  // react-easy-crop 掛載時會自動觸發 onCropComplete，導致 setCropBox 在 loadImage clear() 之後
-  // 再次寫入歷史。在 source 改變後（parent effect 晚於 child effects 執行），補一次 clear()。
-  useEffect(() => {
-    if (source) {
-      useEditorStore.temporal.getState().clear();
-    }
-  }, [source]);
 
   const canUndo = useStore(useEditorStore.temporal, (s) => s.pastStates.length > 0);
   const canRedo = useStore(useEditorStore.temporal, (s) => s.futureStates.length > 0);

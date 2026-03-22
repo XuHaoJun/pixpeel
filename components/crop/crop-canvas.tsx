@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import Cropper from "react-easy-crop";
 import type { Area } from "react-easy-crop";
 import type { CropBox } from "@/types/editor";
@@ -24,24 +24,43 @@ export function CropCanvas({
   onCropComplete,
   onZoomChange,
 }: CropCanvasProps) {
-  // react-easy-crop 的 crop 座標是相對於顯示區域的百分比
-  // onCropComplete 的 croppedAreaPixels 才是實際像素座標
   const crop = { x: 0, y: 0 };
+
+  // react-easy-crop 初始化時會從 recomputeCropPosition / onMediaLoad 觸發多次
+  // onCropComplete（實測 4 次），全部都在使用者互動之前。
+  // 用 pointerdown 旗標判斷「使用者是否真正開始拖動」：
+  //   - 未互動前：所有 onCropComplete 走 onCropChange（= updateCropBoxPreview，不寫歷史）
+  //   - 互動後：走 onCropComplete（= setCropBox，正常寫歷史）
+  // imageSrc 改變時同步重置旗標（在 render 期間），確保新圖載入時重新等待互動。
+  const hasInteractedRef = useRef(false);
+  const prevImageSrcRef = useRef(imageSrc);
+  if (prevImageSrcRef.current !== imageSrc) {
+    prevImageSrcRef.current = imageSrc;
+    hasInteractedRef.current = false;
+  }
 
   const handleCropComplete = useCallback(
     (_: Area, croppedAreaPixels: Area) => {
-      onCropComplete({
+      const box: CropBox = {
         x: croppedAreaPixels.x,
         y: croppedAreaPixels.y,
         width: croppedAreaPixels.width,
         height: croppedAreaPixels.height,
-      });
+      };
+      if (!hasInteractedRef.current) {
+        onCropChange(box); // 初始化觸發 — 不寫歷史
+        return;
+      }
+      onCropComplete(box); // 使用者互動後 — 正常寫歷史
     },
-    [onCropComplete]
+    [onCropChange, onCropComplete]
   );
 
   return (
-    <div className="relative w-full h-full min-h-[400px] bg-checkerboard">
+    <div
+      className="relative w-full h-full min-h-[400px] bg-checkerboard"
+      onPointerDown={() => { hasInteractedRef.current = true; }}
+    >
       <Cropper
         image={imageSrc}
         crop={crop}
