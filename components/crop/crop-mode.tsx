@@ -36,8 +36,8 @@ export function CropMode() {
   if (!source || !cropBox) return null;
 
   return (
-    <div className="flex flex-col gap-4 h-full">
-      <div className="flex-1 min-h-[400px]">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <CropCanvas
           imageSrc={source.objectUrl}
           cropBox={cropBox}
@@ -49,7 +49,7 @@ export function CropMode() {
         />
       </div>
 
-      <div className="flex flex-col gap-4 px-1">
+      <div className="flex flex-col gap-4 px-4 py-3 border-t shrink-0">
         <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
         <AutoCropControls
           config={autoCropConfig}

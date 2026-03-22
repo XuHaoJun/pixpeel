@@ -21,7 +21,7 @@ export function FittingStrategySelector({ value, onChange }: FittingStrategySele
       <ToggleGroup
         value={[value]}
         onValueChange={(v) => { const next = v[0]; if (next) onChange(next as FittingStrategy); }}
-        className="flex gap-1"
+        className="flex gap-1 w-full"
       >
         {STRATEGIES.map((s) => (
           <ToggleGroupItem
