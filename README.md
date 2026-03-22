@@ -2,6 +2,8 @@
 
 輕量的前端圖片處理工具，支援手動裁切、自動裁切與三種縮放策略（Contain / Cover / Fill）。完全在瀏覽器端執行，無需上傳伺服器。
 
+**Demo：** https://pixpeel-git-main-xuhaojuns-projects.vercel.app/
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_ORG%2Fpixpeel&project-name=pixpeel&repository-name=pixpeel)
 
 ## 功能
