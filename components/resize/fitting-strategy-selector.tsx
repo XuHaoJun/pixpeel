@@ -21,17 +21,18 @@ export function FittingStrategySelector({ value, onChange }: FittingStrategySele
       <ToggleGroup
         value={[value]}
         onValueChange={(v) => { const next = v[0]; if (next) onChange(next as FittingStrategy); }}
-        className="flex gap-1 w-full"
+        orientation="vertical"
+        className="w-full"
       >
         {STRATEGIES.map((s) => (
           <ToggleGroupItem
             key={s.value}
             value={s.value}
-            className="flex-1 flex flex-col h-auto py-2 px-1 gap-0.5"
+            className="w-full justify-start h-auto py-2 px-3 gap-3"
             aria-label={s.label}
           >
-            <span className="text-xs font-semibold">{s.label}</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">{s.description}</span>
+            <span className="text-sm font-medium w-14 shrink-0 text-left">{s.label}</span>
+            <span className="text-xs text-muted-foreground text-left">{s.description}</span>
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
