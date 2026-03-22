@@ -8,6 +8,7 @@ import { Toolbar } from "./toolbar";
 import { ExportPanel } from "./export-panel";
 import { CropMode } from "@/components/crop/crop-mode";
 import { ResizeMode } from "@/components/resize/resize-mode";
+import { ResizePreview } from "@/components/resize/resize-preview";
 
 export function ImageEditor() {
   const source = useEditorStore((s) => s.source);
@@ -50,11 +51,7 @@ export function ImageEditor() {
         {/* 左側：預覽區 */}
         <div className="flex-1 overflow-hidden">
           {mode === "crop" && <CropMode />}
-          {mode === "resize" && (
-            <div className="flex items-center justify-center h-full bg-muted/20 text-muted-foreground text-sm">
-              設定目標尺寸後點擊下載
-            </div>
-          )}
+          {mode === "resize" && <ResizePreview />}
         </div>
 
         {/* 右側：控制面板 */}
