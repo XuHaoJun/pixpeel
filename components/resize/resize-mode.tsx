@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DimensionInputs } from "./dimension-inputs";
 import { FittingStrategySelector } from "./fitting-strategy-selector";
 import { BackgroundColorPicker } from "./background-color-picker";
+import { PresetSizeSelector } from "./preset-size-selector";
 import { useEditorStore } from "@/hooks/use-editor-store";
 
 export function ResizeMode() {
@@ -16,6 +17,12 @@ export function ResizeMode() {
 
   return (
     <div className="flex flex-col gap-5 px-1">
+      <PresetSizeSelector
+        currentWidth={resizeConfig.targetWidth}
+        currentHeight={resizeConfig.targetHeight}
+        onSelect={(w, h) => setResizeConfig({ targetWidth: w, targetHeight: h })}
+      />
+
       <DimensionInputs
         width={resizeConfig.targetWidth}
         height={resizeConfig.targetHeight}
