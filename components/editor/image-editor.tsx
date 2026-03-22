@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "zustand";
-import { Crop, Maximize2, Undo2, Redo2 } from "lucide-react";
+import { Crop, Maximize2, Undo2, Redo2, FolderOpen } from "lucide-react";
 import { useEditorStore } from "@/hooks/use-editor-store";
 import { ImageUploader } from "./image-uploader";
 import { ExportPanel } from "./export-panel";
@@ -10,6 +10,15 @@ import { CropMode } from "@/components/crop/crop-mode";
 import { ResizeMode } from "@/components/resize/resize-mode";
 import { ResizePreview } from "@/components/resize/resize-preview";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { EditorMode } from "@/types/editor";
 
@@ -19,16 +28,20 @@ const MODES: { id: EditorMode; label: string; Icon: React.ComponentType<{ classN
 ];
 
 export function ImageEditor() {
-  const source   = useEditorStore((s) => s.source);
-  const mode     = useEditorStore((s) => s.mode);
+  const source    = useEditorStore((s) => s.source);
+  const mode      = useEditorStore((s) => s.mode);
   const loadImage = useEditorStore((s) => s.loadImage);
-  const setMode  = useEditorStore((s) => s.setMode);
+  const setMode   = useEditorStore((s) => s.setMode);
 
   const canUndo = useStore(useEditorStore.temporal, (s) => s.pastStates.length > 0);
   const canRedo = useStore(useEditorStore.temporal, (s) => s.futureStates.length > 0);
   const undo = useCallback(() => useEditorStore.temporal.getState().undo(), []);
   const redo = useCallback(() => useEditorStore.temporal.getState().redo(), []);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
@@ -43,6 +56,28 @@ export function ImageEditor() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [canUndo, canRedo, undo, redo]);
+
+  const triggerFileInput = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleOpenClick = useCallback(() => {
+    if (canUndo) {
+      setConfirmOpen(true);
+    } else {
+      triggerFileInput();
+    }
+  }, [canUndo, triggerFileInput]);
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) loadImage(file);
+      // reset so the same file can be re-selected
+      e.target.value = "";
+    },
+    [loadImage]
+  );
 
   if (!source) {
     return (
@@ -60,9 +95,57 @@ export function ImageEditor() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {/* Unsaved-edits confirmation dialog */}
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>開啟新圖片</DialogTitle>
+            <DialogDescription>
+              目前有尚未下載的編輯紀錄，開啟新圖片後將會遺失。確定要繼續嗎？
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              取消
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setConfirmOpen(false);
+                triggerFileInput();
+              }}
+            >
+              繼續開啟
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* ── Header ── */}
       <header className="flex items-center h-12 px-4 border-b shrink-0 gap-2">
-        <span className="font-bold text-base w-20 shrink-0">Pixpeel</span>
+        <div className="flex items-center gap-2 w-20 shrink-0">
+          <span className="font-bold text-base">Pixpeel</span>
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleOpenClick}
+          className="gap-1.5 text-muted-foreground hover:text-foreground"
+          aria-label="開啟圖片"
+        >
+          <FolderOpen className="w-4 h-4" />
+          開啟
+        </Button>
 
         <div className="flex flex-1 items-center justify-center gap-1">
           <Button variant="ghost" size="icon" onClick={undo} disabled={!canUndo} aria-label="復原">
