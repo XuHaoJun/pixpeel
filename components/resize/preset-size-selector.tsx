@@ -68,7 +68,7 @@ const PRESET_GROUPS: { platform: string; items: PresetSize[] }[] = [
 
 const ALL_PRESETS = PRESET_GROUPS.flatMap((g) => g.items);
 const HISTORY_KEY = "pixpeel-preset-history";
-const HISTORY_MAX = 5;
+const HISTORY_MAX = 3;
 
 function loadHistory(): PresetSize[] {
   try {
