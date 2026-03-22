@@ -38,7 +38,7 @@ export function ExportPanel() {
   };
 
   return (
-    <div className="flex items-center gap-3 p-3 border-t bg-background">
+    <div className="flex items-center gap-2">
       <Select
         value={exportConfig.format}
         onValueChange={(v) => setExportConfig({ format: v as OutputFormat })}
@@ -76,7 +76,7 @@ export function ExportPanel() {
         size="sm"
         onClick={handleExport}
         disabled={isProcessing}
-        className="gap-1.5 ml-auto"
+        className="gap-1.5"
       >
         {isProcessing ? (
           <Loader2 className="w-4 h-4 animate-spin" />
